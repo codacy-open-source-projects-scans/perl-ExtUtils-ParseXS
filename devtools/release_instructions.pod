@@ -1,0 +1,62 @@
+=head1 Release instructions for ExtUtils::ParseXS
+
+=head2 Prerequisites
+
+Recent ExtUtils::ParseXS releases have been packaged using the CPDK tool
+by Eric Wilhelm.  This distribution is not yet on CPAN, but can be
+installed from its repository:
+
+  $ svn co http://svn.scratchcomputing.com/CPDK/trunk/ CPDK
+  $ cd CPDK
+  $ cpan .
+
+=head2 Packaging and shipping
+
+Update ExtUtils::ParseXS and make sure there are no local changes or conflicts.
+
+  $ svn up
+
+  $ svn st
+
+See what the last tag was:
+
+  $ svn_taglist | tail
+  ...
+  0.31_02
+
+Pull the logs since that tag and update the Changes file if necessary
+
+  $ svn_logsincetag 0.31_02 | less
+  ...
+
+  $ vim Changes
+
+If everything is good, just datestamp the version section at the top of
+Changes (e.g. use "r! date" then "kJ" in vim.)
+
+  $ svn ci -m "Changes - prep for release"
+
+Then update the metafiles and check in any changes -- this should only
+be needed if something changes the Makefile.PL
+
+  $ perl Build.PL
+  $ Build distmeta
+  $ svn st
+  $ svn ci
+
+And we should now be ready for automated shipping:
+
+  $ publish-module
+
+This produces a tarball, which must be manually uploaded to PAUSE
+
+=head2 After shipping
+
+Now the release is out and tagged.  Start a new version number
+
+  $ ./devtools/bump_version.pl
+
+  $ svn ci -m "Changes, lib/***.pm - bump version"
+
+=cut
+
